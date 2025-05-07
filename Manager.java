@@ -47,6 +47,7 @@ public class Manager {
             UI.println("(A)dd a book");
             UI.println("(F)ind a book");
             UI.println("(P)rint all books");
+            UI.println("(R)emove a book");
             UI.println("(Q)quit");
 
             choice = UI.askString("Enter a Choice: ");
@@ -54,7 +55,7 @@ public class Manager {
             if (choice.equalsIgnoreCase("A")) {
                 // Add Book
                 do {
-                     title = UI.askString("Book Title: ").trim();
+                    title = UI.askString("Book Title: ").trim();
                     if (!title.isEmpty()) {
                         author = UI.askString("Author Name: ");
                         //addBook(title, author, likes);
@@ -79,6 +80,15 @@ public class Manager {
                 // Quit the UI
                 UI.println("Goodbye!");
                 UI.quit();
+            } else if (choice.equalsIgnoreCase("R")) {
+                //Remove a book from Library
+                title = UI.askString("Book Title: ").trim();
+                findBook(title);
+                if (findBook(title) == true) {
+                    removeBooks();    
+                } else {
+                    UI.println("Can't find book to remove");
+                }
             } else {
                 UI.println("Invalid Response!");
             }
@@ -136,6 +146,15 @@ public class Manager {
                         + library.get(bookId).getAuthor() + ", Quanitity: "
                         + library.get(bookId).getLikes());
         }
+    }
+    
+    /**
+     * Removes a book from the Library
+     */
+    public void removeBooks() {
+        
+        library.remove(currBookId);
+        UI.println("Removed" + currBookId);
     }
 
      /**

@@ -22,6 +22,7 @@ public class GUI {
     UI.addButton("Print All", books::printBooks);
     UI.addButton("Add", this::addBooks);
     UI.addButton("Find", this::findBook);
+    UI.addButton("Remove", this::removeBook);
     UI.setMouseListener(this::doMouse);
     UI.addButton("Quit", UI::quit);
   }
@@ -101,6 +102,15 @@ public class GUI {
         } else {
             UI.println("That book does not exist!");
         }
+    }
+
+    /**
+     * Remove book from library.
+     */
+    public void removeBook() {
+        String title = getString("Title: ");
+        this.books.findBook(title);
+        this.books.removeBooks();
     }
 
     /**
