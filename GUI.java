@@ -5,121 +5,123 @@ import ecs100.*;
  * @author Katelyn Young
  * @version 10/04/2025
  */
-public class GUI
-{
-    // instance variables
-    private Manager books;
-    private Book book;
+public class GUI {
+  // instance variables
+  private Manager books;
+  private Book book;
+
+  /**
+  * Constructor for objects of class GUI.
+  */
+  public GUI() {
+    // initialise instance variables
+    books = new Manager();  //instantiate the books
+
+    // Set up GUI
+    UI.initialise();
+    UI.addButton("Print All", books::printBooks);
+    UI.addButton("Add", this::addBooks);
+    UI.addButton("Find", this::findBook);
+    UI.setMouseListener(this::doMouse);
+    UI.addButton("Quit", UI::quit);
+  }
 
     /**
-     * Constructor for objects of class GUI
+     *Add a book to collection.
      */
-    public GUI()
-    {
-        // initialise instance variables
-        books = new Manager();  //instantiate the books
-        
-        // Set up GUI
-        UI.initialise();
-        UI.addButton("Print All", books::printBooks);
-        UI.addButton("Add", this::addBooks);
-        UI.addButton("Find", this::findBook);
-        //UI.addButton("Edit", this::editNumLikes);
-        UI.setMouseListener(this::doMouse);
-        UI.addButton("Quit", UI::quit);
-
-    }
-
-    /**
-     *Add a book to collection
-     */
-    public void addBooks()
-    {
+    public void addBooks() {
         // force a range of quantity
         final int MAX_QUANTITY = 99; // max quantity it can add to the hashmap
-        int numLikes; 
+        int numLikes;
         String name;
         String author;
         boolean repeatedBook = false;
-        
+
         //Ask the user for book name and author
         do {
             name = getString("Title: ");
             author = getString("Author: ");
-            if ((this.books.findBook(name) == true && this.books.findBook(author) == true)){ 
+            if ((this.books.findBook(name) == true
+            && this.books.findBook(author) == true)) {
                 UI.println("Book and Author");
                 repeatedBook = true;
             }
-        }while(repeatedBook = false);
-        
+        } while (repeatedBook = false);
+
         //Check boundaries for the number of books added
         do {
             numLikes = UI.askInt("Quantity: ");
-            if ((numLikes > 0) && (numLikes <= MAX_QUANTITY)){
+            if ((numLikes > 0) && (numLikes <= MAX_QUANTITY)) {
                 UI.println("Added");
-            }else if (numLikes > MAX_QUANTITY) {
+            } else if (numLikes > MAX_QUANTITY) {
                 UI.println("Must be less than 100");
-            }else if (numLikes < 1){
+            } else if (numLikes < 1) {
                 UI.println("Must be greater than 0");
-            }else{
+            } else {
                 UI.println("Must be a number!");
             }
-        }while (0 > numLikes || numLikes > MAX_QUANTITY);
+        } while (0 > numLikes || numLikes > MAX_QUANTITY);
         // add a book image for display
         String imgFileName = UIFileChooser.open("Choose Image File: ");
-        
+
         // add books with images
         this.books.addBook(name, author, numLikes, imgFileName);
     }
-    
+
     /**
-     * Checks to see if the
+     * Validates String.
+     * @param prompt
+     * @return string
      */
-    public String getString(String prompt) {
+    public String getString(final String prompt) {
         String string;
         do {
-            string = UI.askString(prompt).trim();            
+            string = UI.askString(prompt).trim();
             if (string.isEmpty()) {
                 UI.println("Please input something!");
             }
-        }while (string.isEmpty());
+        } while (string.isEmpty());
         return string;
     }
-    
+
     /**
-     * Finds book based on name
+     * Finds book based on name.
      * Prints out the author and qty if found
      */
-    public void findBook(){
+    public void findBook() {
         String bookName = UI.askString("Name of Books: ");
-        if(this.books.findBook(bookName.toLowerCase().trim())){ // Refer back to Books instance books method findBook to return true or false
+        // Refer back to Manager method findBook to return true or false
+        if (this.books.findBook(bookName.toLowerCase().trim())) {
             UI.println("Found Book!");
-            
-            this.book = books.getBook(); 
+
+            this.book = books.getBook();
             this.book.displayBook();
             UI.println("Author: " + this.book.getAuthor());
             UI.println("Quantity: " + this.book.getLikes());
-        }
-        else{
+        } else {
             UI.println("That book does not exist!");
         }
     }
-    
+
     /**
-     * Add likes when click the book cover
+     * Add likes when click the book cover.
+     * @param action
+     * @param x
+     * @param y
      */
-    public void doMouse(String action, double x, double y){
+    public void doMouse(final String action, final double x, final double y) {
         //UI.println(action + ":" + x + ":" + y);
-        if (action.equals("clicked") && (this.book != null)){
+        if (action.equals("clicked") && (this.book != null)) {
             int getLikes = this.book.likeBook(x, y);
             UI.println("Likes: " + getLikes);
         }
     }
-    
+
     /**
-     * main routine
+     * main routine.
+     * @param args
      */
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         new GUI();
     }
 }
