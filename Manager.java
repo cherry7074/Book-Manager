@@ -82,13 +82,7 @@ public class Manager {
                 UI.quit();
             } else if (choice.equalsIgnoreCase("R")) {
                 //Remove a book from Library
-                title = UI.askString("Book Title: ").trim();
-                findBook(title);
-                if (findBook(title) == true) {
-                    removeBooks();    
-                } else {
-                    UI.println("Can't find book to remove");
-                }
+                removeBook();
             } else {
                 UI.println("Invalid Response!");
             }
@@ -140,22 +134,29 @@ public class Manager {
      */
     public void printBooks() {
         //Print all books
+        int numList = 1;
         for (int bookId: library.keySet()) {
-            UI.println(bookId + " Details:");
+            UI.println(numList++ + " Details:");
             UI.println(library.get(bookId).getTitle() + " by "
                         + library.get(bookId).getAuthor() + ", Quanitity: "
                         + library.get(bookId).getLikes());
         }
     }
-    
+
     /**
-     * Removes a book from the Library
+     * Remove book from library.
      */
-    public void removeBooks() {
-        
-        library.remove(currBookId);
-        UI.println("Removed" + currBookId);
-    }
+    public void removeBook() {
+        String title = UI.askString("Title: ");
+        findBook(title);
+
+        if (findBook(title)) {
+            library.remove(currBook.getId());
+            UI.println(title + "was Removed");
+        } else {
+            UI.println("Cannot find that book");
+        }
+        }
 
      /**
      * Book Getter.

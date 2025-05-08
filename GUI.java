@@ -22,7 +22,7 @@ public class GUI {
     UI.addButton("Print All", books::printBooks);
     UI.addButton("Add", this::addBooks);
     UI.addButton("Find", this::findBook);
-    UI.addButton("Remove", this::removeBook);
+    UI.addButton("Remove", books::removeBook);
     UI.setMouseListener(this::doMouse);
     UI.addButton("Quit", UI::quit);
   }
@@ -42,12 +42,12 @@ public class GUI {
         do {
             name = getString("Title: ");
             author = getString("Author: ");
-            if ((this.books.findBook(name) == true
-            && this.books.findBook(author) == true)) {
+            if ((this.books.findBook(name)
+            && this.books.findBook(author))) {
                 UI.println("Book and Author");
                 repeatedBook = true;
             }
-        } while (repeatedBook = false);
+        } while (repeatedBook);
 
         //Check boundaries for the number of books added
         do {
@@ -90,7 +90,7 @@ public class GUI {
      * Prints out the author and qty if found
      */
     public void findBook() {
-        String bookName = UI.askString("Name of Books: ");
+        String bookName = UI.askString("Name of Book: ");
         // Refer back to Manager method findBook to return true or false
         if (this.books.findBook(bookName.toLowerCase().trim())) {
             UI.println("Found Book!");
@@ -102,15 +102,6 @@ public class GUI {
         } else {
             UI.println("That book does not exist!");
         }
-    }
-
-    /**
-     * Remove book from library.
-     */
-    public void removeBook() {
-        String title = getString("Title: ");
-        this.books.findBook(title);
-        this.books.removeBooks();
     }
 
     /**
