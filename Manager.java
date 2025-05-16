@@ -37,47 +37,6 @@ public class Manager {
     }
 
     /**
-     * Menu to print all books and call appropriate methods.
-     */
-    public void menu() {
-        String choice;
-        boolean valid = true;
-        String title;
-        do {
-            UI.println("(A)dd a book");
-            UI.println("(F)ind a book");
-            UI.println("(P)rint all books");
-            UI.println("(R)emove a book");
-            UI.println("(Q)quit");
-
-            choice = UI.askString("Enter a Choice: ");
-            if (choice.equalsIgnoreCase("A")) {
-                // Add Book
-                addBooks();
-            } else if (choice.equalsIgnoreCase("F")) {
-                // Find Book
-                title = UI.askString("Search book title: ");
-                author = UI.askString("Author of that book: ");
-                if (findBook(title, author)) {
-                    UI.println("Book: " + currBook.getTitle() + " found!");
-                }
-            } else if (choice.equalsIgnoreCase("P")) {
-                // Print all books
-                printBooks();
-            } else if (choice.equalsIgnoreCase("Q")) {
-                // Quit the UI
-                UI.println("Goodbye!");
-                UI.quit();
-            } else if (choice.equalsIgnoreCase("R")) {
-                //Remove a book from Library
-                removeBook();
-            } else {
-                UI.println("Invalid Response!");
-            }
-        } while (!choice.equalsIgnoreCase("Q"));
-    }
-
-    /**
      * Increment the book Id by one.
      */
     public void setBookId() {
@@ -85,34 +44,19 @@ public class Manager {
     }
 
     /**
-     * Add a book to the HashMap.
-     * @param title
-     * @param author
-     * @param quantity
-     * @param img
-     */
-    public void addBook(final String title, final String author,
-    final int quantity, final String img) {
-        this.setBookId();
-        
-        library.put(currBookId, new Book(currBookId, title,
-        author, quantity, img));
-    }
-    
-    /**
      *Add a book to collection.
      */
     public void addBooks() {
         // force a range of quantity
         final int MAX_QUANTITY = 99; // max quantity it can add to the hashmap
-        int quantity;
-        String name;
+        String title;
         String author;
+        int quantity;
 
         //Ask the user for book name and author
-        name = getString("Title: ");
+        title = getString("Title: ");
         author = getString("Author: ");
-        if (this.validBook(name, author)) {
+        if (this.validBook(title, author)) {
             UI.println("Book has already been added.");
         } else {
             //Check boundaries for the number of books added
@@ -132,20 +76,24 @@ public class Manager {
             String imgFileName = UIFileChooser.open("Choose Image File: ");
 
             // add books with images
-            this.addBook(name, author, quantity, imgFileName);
+            this.setBookId(); //Increments book Id by one
+
+            library.put(currBookId, new Book(currBookId, title,
+            author, quantity, imgFileName)); //Adds book to library hashmap
         }
     }
 
     /**
      * Find a book based on it's name.
      * @param name
+     * @param author
      * @return false
      **/
      public boolean findBook(final String name, final String author) {
          // Find book
          for (int bookId: library.keySet()) {
              if (library.get(bookId).getTitle().toLowerCase()
-             .equals(name.toLowerCase()) 
+             .equals(name.toLowerCase())
              && (library.get(bookId).getAuthor().equals(author))) {
                  currBook = library.get(bookId);
                  //library.get(bookId).displayBook();
@@ -154,7 +102,7 @@ public class Manager {
          }
          return false;
      }
-     
+
     /**
      * Finds book based on name.
      * Prints out the author and qty if found
@@ -177,12 +125,15 @@ public class Manager {
 
     /**
      * Doesn't allow the same book to be added.
+     * @param title
+     * @param author
+     * @return false
      */
     public boolean validBook(final String title, final String author) {
         //Checks each book in the library to see if there are duplicates
         for (Book eachBook: library.values()){
             if (eachBook.getTitle().toLowerCase().equals(title.toLowerCase())
-            && eachBook.getAuthor().toLowerCase().equals(author.toLowerCase())){
+            && eachBook.getAuthor().toLowerCase().equals(author.toLowerCase())) {
                 return true;
             }
         }
@@ -219,7 +170,7 @@ public class Manager {
             UI.println("Cannot find that book");
         }
         }
-        
+
     /**
      * Add likes when click the book cover.
      * @param action
@@ -234,9 +185,9 @@ public class Manager {
             UI.println("Likes: " + getLikes++);
         }
     }
-        
+
     /**
-     * Validates String.
+     * Validates String to make sure it's not empty.
      * @param prompt
      * @return string
      */
@@ -257,9 +208,5 @@ public class Manager {
      */
     public Book getBook() {
         return this.currBook;
-    }
-    
-    public static void main(final String[] args) {
-        new Manager();
     }
     }
